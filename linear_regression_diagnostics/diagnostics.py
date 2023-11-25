@@ -59,5 +59,72 @@ class LinearRegDiagnostic():
         ax.set_ylabel("Residuals")
         return ax
     
-    
+    def qq_plot(self, ax=None):
+        if ax is None:
+            fig, ax = plt.subplots()
         
+        QQ = ProbPlot(self.residual_norm)
+        fig = QQ.qqplot(line="45", alpha=0.5, lw=1, ax=ax)
+
+        # Annotations
+        abs_norm_resid = np.flip(np.argsort(np.abs(self.residual_norm)), 0)
+        abs_norm_resid_top_3 = abs_norm_resid[:3]
+        for i, x, y in self.__qq_top_resid(QQ.theoretical_quantiles, abs_norm_resid_top_3):
+            ax.annotate(
+                i,
+                xy=(x, y),
+                ha="right",
+                color="C3"
+            )
+        ax.set_title("Normal Q-Q", fontweight="bold")
+        ax.set_xlabel("Theoretical Quantiles")
+        ax.set_ylabel("Standardized Residuals")
+        return ax
+    
+    def scale_location_plot(self, ax=None):
+        if ax is None:
+            fig, ax = plt.subplots()
+
+        residual_norm_abs_sqrt = np.sqrt(np.abs(self.residual_norm))
+
+        ax.scatter(self.y_predict, residual_norm_abs_sqrt, alpha=0.5)
+        sns.regplot(
+            x=self.y_predict,
+            y=residual_norm_abs_sqrt,
+            scatter=False, ci=False,
+            lowess=True,
+            line_kws={"color":"red", "lw":1, "alpha":0.8},
+            ax=ax
+        )
+
+        # Annotations
+        abs_sq_norm_resid = np.flip(np.argsort(residual_norm_abs_sqrt), 0)
+        abs_sq_norm_resid_top_3 = abs_sq_norm_resid[:3]
+        for i in abs_sq_norm_resid_top_3:
+            ax.annotate(
+                i,
+                xy=(self.y_predict[i], residual_norm_abs_sqrt[i]),
+                color="C3"
+            )
+        ax.set_title("Scale-Location", fontweight="bold")
+        ax.set_xlabel("Fitted Values")
+        ax.set_ylabel(r"$\sqrt{|\mathrm{Standardized\ Residuals}|}$")
+        return ax
+
+    def leverage_plot(self, ax=None, high_leverage_threshold=False, cooks_threshold="baseR"):
+        if ax is None:
+            fig, ax = plt.subplots()
+
+        ax.scatter(
+            self.leverage,
+            self.residual_norm,
+            alpha=0.5)
+
+        sns.regplot(
+            x=self.leverage,
+            y=self.residual_norm,
+            scatter=False,
+            ci=False,
+            lowess=True,
+            line_kws={"color":"red", "lw":1, "alpha":0.8}
+        )
