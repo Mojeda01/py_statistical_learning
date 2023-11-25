@@ -43,3 +43,21 @@ class LinearRegDiagnostic():
             scatter_kws={"alpha":0.5},
             line_kws={"Color":"red", "lw":1, "alpha":0.8},
             ax=ax)
+        
+        # Annotations
+        residual_abs = np.abs(self.residual)
+        abs_resid = np.flip(np.argsort(residual_abs), 0)
+        abs_resid_top_3 = abs_resid[:3]
+        for i in abs_resid_top_3:
+            ax.annotate(
+                i,
+                xy=(self.y_predict[i], self.residual[i]),
+                color="C3"
+            )
+        ax.set_title("Residuals vs. fitted", fontweight="bold")
+        ax.set_xlabel("Fitted Values")
+        ax.set_ylabel("Residuals")
+        return ax
+    
+    
+        
