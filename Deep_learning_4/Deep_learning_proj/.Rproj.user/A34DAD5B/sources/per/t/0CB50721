@@ -1,0 +1,28 @@
+{
+    "id": "0CB50721",
+    "path": null,
+    "project_path": null,
+    "type": "object_explorer",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1701450843492.0,
+    "source_on_save": false,
+    "relative_order": 4,
+    "properties": {
+        "id": "eab0fc181cce43c3ba18dedf1a55b09a",
+        "name": "lfit",
+        "title": "lfit",
+        "language": "R",
+        "source_window_id": "",
+        "Source": "Source"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 0,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1701450843492,
+    "read_only": false,
+    "read_only_alternatives": []
+}

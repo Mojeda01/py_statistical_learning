@@ -1,0 +1,39 @@
+library(keras)
+
+set.seed(123) # Setting a seed for reproducibility
+
+# Number of features
+num_features <- 5
+
+# Number of observations in the training and testing datasets
+n_train <- 500
+n_test <- 200
+
+# Generate random training data
+x_train <- matrix(rnorm(n_train * num_features), ncol = num_features)
+y_train <- ifelse(rowSums(x_train) > 0, 1, 0) # A simple rule to generate binary targets
+
+# Generate random testing data
+x_test <- matrix(rnorm(n_test * num_features), ncol = num_features)
+y_test <- ifelse(rowSums(x_test) > 0, 1, 0) # A simple rule to generate binary targets
+
+model <- keras_model_sequential() %>%
+  layer_dense(units = 32, activation = 'relu', input_shape = c(num_features)) %>%
+  layer_dense(units = 1, activation = 'sigmoid')
+
+model %>% compile(
+  loss = 'binary_crossentropy',
+  optimizer = optimizer_rmsprop(),
+  metrics = c('accuracy')
+)
+
+history <- model %>% fit(
+  x_train, y_train,
+  epochs = 10,
+  batch_size = 128,
+  validation_split = 0.2
+)
+
+model %>% evaluate(x_test, y_test)
+predictions <- model %>% predict(x_test)
+
